@@ -8,15 +8,18 @@ namespace ChatBot.Services.BotLogic.BotCommands
         private readonly ITransactionRepository _transactionRepository;
         private readonly IHabitRepository _habitRepository;
         private readonly IExpenseRepository _expenseRepository; 
+        private readonly IIncomeRepository _incomeRepository;
 
         public StatsCommand(
             ITransactionRepository transactionRepository, 
             IHabitRepository habitRepository, 
-            IExpenseRepository expenseRepository)
+            IExpenseRepository expenseRepository,
+            IIncomeRepository incomeRepository) 
         {
             _transactionRepository = transactionRepository;
             _habitRepository = habitRepository;
             _expenseRepository = expenseRepository;
+            _incomeRepository = incomeRepository;
         }
 
         public string Execute(string[] args, string currentUserId)
@@ -28,12 +31,21 @@ namespace ChatBot.Services.BotLogic.BotCommands
                 .Where(t => t.UserId == currentUserId)
                 .ToList();
 
+            var userIncomes = _incomeRepository.GetAllIncomes()
+                .Where(i => i.UserId == currentUserId)
+                .ToList();
+
+            var totalExpenses = userTransactions.Sum(t => t.Amount);
+            var totalIncome = userIncomes.Sum(i => i.Amount);
+            var balance = totalIncome - totalExpenses;
+
+            sb.AppendLine("💰 **Фінанси:**");
+            sb.AppendLine($"   🟩 Загальний дохід: +{totalIncome} ₴");
+            sb.AppendLine($"   🟥 Загальні витрати: -{totalExpenses} ₴");
+            sb.AppendLine($"   ⚖️ Баланс: {balance} ₴");
+
             if (userTransactions.Any())
             {
-                var totalExpenses = userTransactions.Sum(t => t.Amount);
-                sb.AppendLine("💰 **Фінанси:**");
-                sb.AppendLine($"   Загальна сума витрат: {totalExpenses} ₴");
-
                 var topCategoryGroup = userTransactions
                     .GroupBy(t => t.CategoryId)
                     .OrderByDescending(g => g.Sum(t => t.Amount))
@@ -46,12 +58,8 @@ namespace ChatBot.Services.BotLogic.BotCommands
                     
                     string categoryName = category != null ? category.Name : "Невідома категорія";
                     
-                    sb.AppendLine($"   Найбільше витрачено на: {categoryName} ({topCategoryGroup.Sum(t => t.Amount)} ₴)");
+                    sb.AppendLine($"   🔥 Найбільша стаття витрат: {categoryName} ({topCategoryGroup.Sum(t => t.Amount)} ₴)");
                 }
-            }
-            else
-            {
-                sb.AppendLine("💰 **Фінанси:** Немає даних про витрати.");
             }
 
             sb.AppendLine();
@@ -70,7 +78,7 @@ namespace ChatBot.Services.BotLogic.BotCommands
                 sb.AppendLine($"   Всього активних звичок: {totalHabits}");
                 if (bestStreak > 0 && bestHabit != null)
                 {
-                    sb.AppendLine($"   Рекорд серії: {bestStreak} дн. (Звичка: '{bestHabit.Name}') 🔥");
+                    sb.AppendLine($"   Рекорд серії: {bestStreak} дн. (Звичка: '{bestHabit.Name}') 🏆");
                 }
             }
             else
