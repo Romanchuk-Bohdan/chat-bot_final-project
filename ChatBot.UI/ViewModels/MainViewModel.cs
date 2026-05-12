@@ -36,7 +36,7 @@ namespace ChatBot.UI.ViewModels
         {
             _userRepo = new JsonUserRepository();
             var transRepo = new JsonTransactionRepository();
-            var catRepo = new JsonExpenseRepository();
+            var expenseRepo = new JsonExpenseRepository();
             var habitRepo = new JsonHabitRepository();
             var incomeRepo = new JsonIncomeRepository();
 
@@ -50,11 +50,11 @@ namespace ChatBot.UI.ViewModels
                 { "/help_user", new HelpUserCommand() },
                 { "/help_income", new HelpIncomeCommand() },
                 
-                { "/stats", new StatsCommand(transRepo, habitRepo, catRepo, incomeRepo) },
+                { "/stats", new StatsCommand(transRepo, habitRepo, expenseRepo, incomeRepo) },
                 { "/report", new GenerateReportCommand(_userRepo, transRepo, habitRepo) },
 
-                { "/expense_create", new AddExpenseCommand(transRepo, catRepo) },
-                { "/expense_list", new ListExpensesCommand(transRepo, catRepo) },
+                { "/expense_create", new AddExpenseCommand(transRepo, expenseRepo) },
+                { "/expense_list", new ListExpensesCommand(transRepo, expenseRepo) },
                 { "/expense_delete", new DeleteExpenseCommand(transRepo) },
                 
                 { "/income_add", new AddIncomeCommand(incomeRepo) },
