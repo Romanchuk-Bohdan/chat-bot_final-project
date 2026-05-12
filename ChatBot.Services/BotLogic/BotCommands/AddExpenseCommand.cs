@@ -1,7 +1,7 @@
 ﻿using ChatBot.Core.Interfaces;
 using ChatBot.Core.Models;
 
-namespace ChatBot.Services.BotLogic
+namespace ChatBot.Services.BotLogic.BotCommands
 {
     public class AddExpenseCommand : ICommandStrategy
     {
