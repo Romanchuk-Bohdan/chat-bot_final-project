@@ -7,8 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Repositories\" />
       <Folder Include="Storage\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ChatBot.Core\ChatBot.Core.csproj" />
+      <ProjectReference Include="..\ChatBot.Services\ChatBot.Services.csproj" />
     </ItemGroup>
 
 </Project>
