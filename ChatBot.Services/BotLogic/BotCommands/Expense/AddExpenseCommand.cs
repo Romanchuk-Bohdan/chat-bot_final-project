@@ -6,12 +6,12 @@ namespace ChatBot.Services.BotLogic.BotCommands
     public class AddExpenseCommand : ICommandStrategy
     {
         private readonly ITransactionRepository _transactionRepo;
-        private readonly ICategoryRepository _categoryRepo;
+        private readonly IExpenseRepository _expenseRepo;
 
-        public AddExpenseCommand(ITransactionRepository transactionRepo, ICategoryRepository categoryRepo)
+        public AddExpenseCommand(ITransactionRepository transactionRepo, IExpenseRepository expenseRepo)
         {
             _transactionRepo = transactionRepo;
-            _categoryRepo = categoryRepo;
+            _expenseRepo = expenseRepo;
         }
 
         public string Execute(string[] args, string currentUserId)
@@ -24,7 +24,7 @@ namespace ChatBot.Services.BotLogic.BotCommands
 
             string categoryName = args[1];
 
-            var categories = _categoryRepo.GetAllCategories();
+            var categories = _expenseRepo.GetAllCategories();
             var category = categories.FirstOrDefault(c => 
                 c.Name.ToLower() == categoryName.ToLower() && c.UserId == currentUserId);
 
@@ -33,10 +33,9 @@ namespace ChatBot.Services.BotLogic.BotCommands
                 category = new Category 
                 { 
                     Name = categoryName, 
-                    UserId = currentUserId, 
-                    IsIncome = false 
+                    UserId = currentUserId
                 };
-                _categoryRepo.SaveCategory(category);
+                _expenseRepo.SaveCategory(category);
             }
 
             var transaction = new Transaction
