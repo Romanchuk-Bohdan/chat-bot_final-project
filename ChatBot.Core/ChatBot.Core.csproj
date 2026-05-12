@@ -7,8 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Interfaces\" />
-      <Folder Include="Models\" />
+      <ProjectReference Include="..\ChatBot.Services\ChatBot.Services.csproj" />
     </ItemGroup>
 
 </Project>
