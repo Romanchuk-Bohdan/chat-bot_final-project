@@ -37,18 +37,28 @@ namespace ChatBot.UI.ViewModels
             _userRepo = new JsonUserRepository();
             var transRepo = new JsonTransactionRepository();
             var catRepo = new JsonCategoryRepository();
+            var habitRepo = new JsonHabitRepository();
 
             InitializeDefaultUser();
 
             var commands = new Dictionary<string, ICommandStrategy>
             {
                 { "/help", new HelpCommand() },
+                { "/help_expense", new HelpExpenseCommand() },
+                { "/help_habit", new HelpHabitCommand() },
+                { "/help_user", new HelpUserCommand() },
+
                 { "/expense_create", new AddExpenseCommand(transRepo, catRepo) },
                 { "/expense_list", new ListExpensesCommand(transRepo, catRepo) },
                 { "/expense_delete", new DeleteExpenseCommand(transRepo) },
+
                 { "/user_create", new CreateUserCommand(_userRepo) },
                 { "/user_rename", new RenameUserCommand(_userRepo) },
-                { "/user_list", new ListUsersCommand(_userRepo) }
+                { "/user_list", new ListUsersCommand(_userRepo) },
+                
+                { "/habit_add", new AddHabitCommand(habitRepo) },
+                { "/habit_list", new ListHabitsCommand(habitRepo) },
+                { "/habit_delete", new DeleteHabitCommand(habitRepo) }
             };
 
             _chatEngine = new ChatEngine(commands);

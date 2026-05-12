@@ -6,16 +6,11 @@ namespace ChatBot.Services.BotLogic.BotCommands
     {
         public string Execute(string[] args, string currentUserId)
         {
-            return "Доступні команди:\n" +
-                   "/expense_create [сума] [категорія] - додати витрату\n" +
-                   "/expense_list  - список витрат\n" +
-                   "/expense_delete [ID витрати] - видалити витрату\n" +
-                   "/habit_done [назва] - відмітити звичку\n" +
-                   "/help - список команд\n" +
-                   "/user_create [ім'я користувача] - створити нового користувача\n" +
-                   "/user_rename [нове ім'я] - перейменувати теперішнього користувача" +
-                   "/user_list - вивести список користувачів" +
-                   "/user_switch [ім'я користувача] - зміна користувача";
+            return "🤖 **Меню допомоги:**\n\n" +
+                   "Щоб дізнатися деталі, введіть:\n" +
+                   "/help_expense - Команди фінансів\n" +
+                   "/help_habit - Команди звичок\n" +
+                   "/help_user - Команди користувачів";
         }
     }
 }
