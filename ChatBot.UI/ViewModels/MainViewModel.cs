@@ -29,7 +29,9 @@ namespace ChatBot.UI.ViewModels
             var commands = new Dictionary<string, ICommandStrategy>
             {
                 { "/help", new HelpCommand() },
-                { "/expense", new AddExpenseCommand(transRepo, catRepo) }
+                { "/new_expense", new AddExpenseCommand(transRepo, catRepo) },
+                { "/list_expenses", new ListExpensesCommand(transRepo, catRepo) },
+                { "/delete_expense", new DeleteExpenseCommand(transRepo) }
             };
 
             _chatEngine = new ChatEngine(commands);
