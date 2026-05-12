@@ -13,13 +13,14 @@ namespace ChatBot.Services.BotLogic
 
         public string ProcessMessage(string message, string currentUserId)
         {
-            if (string.IsNullOrWhiteSpace(message) || !message.StartsWith("/"))
-            {
+            if (string.IsNullOrWhiteSpace(message)) return "Повідомлення порожнє.";
+            
+            if (!message.StartsWith("/"))
                 return "Я розумію лише команди, що починаються з '/'. Введіть /help для списку доступних дій.";
-            }
+            
 
             var parts = message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var commandName = parts[0].ToLower(); 
+            var commandName = parts[0].ToLower();
             var args = parts.Skip(1).ToArray();
 
             if (_commands.ContainsKey(commandName))
@@ -27,7 +28,7 @@ namespace ChatBot.Services.BotLogic
                 return _commands[commandName].Execute(args, currentUserId);
             }
 
-            return $"Невідома команда '{commandName}'. Введіть /help для довідки.";
+            return "Невідома команда. Спробуйте /help";
         }
     }
 }

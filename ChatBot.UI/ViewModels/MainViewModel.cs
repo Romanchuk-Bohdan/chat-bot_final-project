@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using ChatBot.Services.BotLogic;
 using ChatBot.UI.Models;
 using ChatBot.Core.Interfaces;
+using ChatBot.Data.Repositories;
 
 namespace ChatBot.UI.ViewModels
 {
@@ -22,10 +23,18 @@ namespace ChatBot.UI.ViewModels
 
         public MainViewModel()
         {
-            _chatEngine = new ChatEngine(new Dictionary<string, ICommandStrategy> 
+            var transRepo = new JsonTransactionRepository();
+            var catRepo = new JsonCategoryRepository();
+
+            var commands = new Dictionary<string, ICommandStrategy>
             {
-                { "/help", new HelpCommand() }
-            });
+                { "/help", new HelpCommand() },
+                { "/new_expense", new AddExpenseCommand(transRepo, catRepo) },
+                { "/list_expenses", new ListExpensesCommand(transRepo, catRepo) },
+                { "/delete_expense", new DeleteExpenseCommand(transRepo) }
+            };
+
+            _chatEngine = new ChatEngine(commands);
 
             Messages.Add(new ChatMessage { Sender = "Бот", Text = "Привіт! Я твій персональний асистент. Введи /help, щоб дізнатися, що я вмію.", IsUser = false });
         }
