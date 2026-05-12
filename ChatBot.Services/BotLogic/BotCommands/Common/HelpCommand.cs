@@ -11,7 +11,8 @@ namespace ChatBot.Services.BotLogic.BotCommands
                    "/help_expense - Команди фінансів\n" +
                    "/help_habit - Команди звичок\n" +
                    "/help_user - Команди користувачів\n" +
-                   "/stats - Виведення статистики";
+                   "/stats - Виведення загальної статистики\n" +
+                   "/report [txt/csv] - Згенерувати файл зі звітом";
         }
     }
 }

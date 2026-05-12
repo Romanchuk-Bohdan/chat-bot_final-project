@@ -49,6 +49,7 @@ namespace ChatBot.UI.ViewModels
                 { "/help_user", new HelpUserCommand() },
                 
                 { "/stats", new StatsCommand(transRepo, habitRepo, catRepo) },
+                { "/report", new GenerateReportCommand(_userRepo, transRepo, habitRepo) },
 
                 { "/expense_create", new AddExpenseCommand(transRepo, catRepo) },
                 { "/expense_list", new ListExpensesCommand(transRepo, catRepo) },
