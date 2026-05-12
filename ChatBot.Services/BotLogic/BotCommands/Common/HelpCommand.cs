@@ -10,7 +10,8 @@ namespace ChatBot.Services.BotLogic.BotCommands
                    "Щоб дізнатися деталі, введіть:\n" +
                    "/help_expense - Команди фінансів\n" +
                    "/help_habit - Команди звичок\n" +
-                   "/help_user - Команди користувачів";
+                   "/help_user - Команди користувачів\n" +
+                   "/stats - Виведення статистики";
         }
     }
 }
