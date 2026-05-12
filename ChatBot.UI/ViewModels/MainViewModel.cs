@@ -39,6 +39,7 @@ namespace ChatBot.UI.ViewModels
             var expenseRepo = new JsonExpenseRepository();
             var habitRepo = new JsonHabitRepository();
             var incomeRepo = new JsonIncomeRepository();
+            var goalRepo = new JsonGoalRepository();
 
             InitializeDefaultUser();
 
@@ -49,6 +50,7 @@ namespace ChatBot.UI.ViewModels
                 { "/help_habit", new HelpHabitCommand() },
                 { "/help_user", new HelpUserCommand() },
                 { "/help_income", new HelpIncomeCommand() },
+                { "/help_goal", new HelpGoalCommand() },
                 
                 { "/stats", new StatsCommand(transRepo, habitRepo, expenseRepo, incomeRepo) },
                 { "/report", new GenerateReportCommand(_userRepo, transRepo, habitRepo) },
@@ -73,7 +75,12 @@ namespace ChatBot.UI.ViewModels
                 
                 { "/habit_add", new AddHabitCommand(habitRepo) },
                 { "/habit_list", new ListHabitCommand(habitRepo) },
-                { "/habit_delete", new DeleteHabitCommand(habitRepo) }
+                { "/habit_delete", new DeleteHabitCommand(habitRepo) },
+                
+                { "/goal_add", new AddGoalCommand(goalRepo) },
+                { "/goal_list", new ListGoalsCommand(goalRepo) },
+                { "/goal_add_money", new ContributeGoalCommand(goalRepo) },
+                { "/goal_delete", new DeleteGoalCommand(goalRepo) }
             };
 
             _chatEngine = new ChatEngine(commands);
