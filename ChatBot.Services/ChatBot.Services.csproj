@@ -7,8 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="BotLogic\" />
       <Folder Include="Helpers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ChatBot.Core\ChatBot.Core.csproj" />
     </ItemGroup>
 
 </Project>
