@@ -7,16 +7,16 @@ namespace ChatBot.Services.BotLogic.BotCommands
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly IHabitRepository _habitRepository;
-        private readonly ICategoryRepository _categoryRepository; 
+        private readonly IExpenseRepository _expenseRepository; 
 
         public StatsCommand(
             ITransactionRepository transactionRepository, 
             IHabitRepository habitRepository, 
-            ICategoryRepository categoryRepository)
+            IExpenseRepository expenseRepository)
         {
             _transactionRepository = transactionRepository;
             _habitRepository = habitRepository;
-            _categoryRepository = categoryRepository;
+            _expenseRepository = expenseRepository;
         }
 
         public string Execute(string[] args, string currentUserId)
@@ -41,7 +41,7 @@ namespace ChatBot.Services.BotLogic.BotCommands
 
                 if (topCategoryGroup != null)
                 {
-                    var category = _categoryRepository.GetAllCategories()
+                    var category = _expenseRepository.GetAllCategories()
                         .FirstOrDefault(c => c.Id == topCategoryGroup.Key);
                     
                     string categoryName = category != null ? category.Name : "Невідома категорія";

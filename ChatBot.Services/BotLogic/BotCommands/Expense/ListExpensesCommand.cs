@@ -6,12 +6,12 @@ namespace ChatBot.Services.BotLogic.BotCommands
     public class ListExpensesCommand : ICommandStrategy
     {
         private readonly ITransactionRepository _transactionRepo;
-        private readonly ICategoryRepository _categoryRepo;
+        private readonly IExpenseRepository _expenseRepo;
 
-        public ListExpensesCommand(ITransactionRepository transactionRepo, ICategoryRepository categoryRepo)
+        public ListExpensesCommand(ITransactionRepository transactionRepo, IExpenseRepository expenseRepo)
         {
             _transactionRepo = transactionRepo;
-            _categoryRepo = categoryRepo;
+            _expenseRepo = expenseRepo;
         }
 
         public string Execute(string[] args, string currentUserId)
@@ -29,7 +29,7 @@ namespace ChatBot.Services.BotLogic.BotCommands
 
             foreach (var t in transactions)
             {
-                var category = _categoryRepo.GetCategoryById(t.CategoryId);
+                var category = _expenseRepo.GetCategoryById(t.CategoryId);
                 string catName = category?.Name ?? "Без категорії";
                 
                 sb.AppendLine($"🆔 {t.Id.Substring(0, 5)} | {t.Amount} грн | {catName} | {t.Date:dd.MM.yyyy}");

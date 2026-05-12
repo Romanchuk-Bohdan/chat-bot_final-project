@@ -2,7 +2,7 @@
 
 namespace ChatBot.Core.Interfaces
 {
-    public interface ICategoryRepository
+    public interface IExpenseRepository
     {
         IEnumerable<Category> GetAllCategories();
         Category GetCategoryById(string id);

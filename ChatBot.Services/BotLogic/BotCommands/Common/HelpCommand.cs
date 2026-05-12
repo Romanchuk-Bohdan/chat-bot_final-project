@@ -8,7 +8,8 @@ namespace ChatBot.Services.BotLogic.BotCommands
         {
             return "🤖 **Меню допомоги:**\n\n" +
                    "Щоб дізнатися деталі, введіть:\n" +
-                   "/help_expense - Команди фінансів\n" +
+                   "/help_expense - Команди фінансів (Витрати)\n" +
+                   "/help_income - Команди фінансів (Доходи)\n" +
                    "/help_habit - Команди звичок\n" +
                    "/help_user - Команди користувачів\n" +
                    "/stats - Виведення загальної статистики\n" +

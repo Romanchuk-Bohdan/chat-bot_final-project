@@ -4,11 +4,11 @@ using ChatBot.Core.Models;
 
 namespace ChatBot.Data.Repositories
 {
-    public class JsonCategoryRepository : ICategoryRepository
+    public class JsonExpenseRepository : IExpenseRepository
     {
         private readonly string _filePath;
 
-        public JsonCategoryRepository(string filePath = "categories.json")
+        public JsonExpenseRepository(string filePath = "categories.json")
         {
             _filePath = filePath;
             EnsureFileExists();
