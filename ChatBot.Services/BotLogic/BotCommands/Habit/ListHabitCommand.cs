@@ -3,11 +3,11 @@ using ChatBot.Core.Interfaces;
 
 namespace ChatBot.Services.BotLogic.BotCommands
 {
-    public class ListHabitsCommand : ICommandStrategy
+    public class ListHabitCommand : ICommandStrategy
     {
         private readonly IHabitRepository _habitRepository;
 
-        public ListHabitsCommand(IHabitRepository habitRepository)
+        public ListHabitCommand(IHabitRepository habitRepository)
         {
             _habitRepository = habitRepository;
         }

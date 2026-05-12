@@ -63,7 +63,7 @@ namespace ChatBot.UI.ViewModels
                 },
                 
                 { "/habit_add", new AddHabitCommand(habitRepo) },
-                { "/habit_list", new ListHabitsCommand(habitRepo) },
+                { "/habit_list", new ListHabitCommand(habitRepo) },
                 { "/habit_delete", new DeleteHabitCommand(habitRepo) }
             };
 
