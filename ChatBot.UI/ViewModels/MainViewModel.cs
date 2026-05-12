@@ -55,6 +55,12 @@ namespace ChatBot.UI.ViewModels
                 { "/user_create", new CreateUserCommand(_userRepo) },
                 { "/user_rename", new RenameUserCommand(_userRepo) },
                 { "/user_list", new ListUsersCommand(_userRepo) },
+                { "/user_switch", new SwitchUserCommand(_userRepo, user => 
+                    {
+                        _currentUserId = user.Id;
+                        CurrentUserName = user.Username; 
+                    }) 
+                },
                 
                 { "/habit_add", new AddHabitCommand(habitRepo) },
                 { "/habit_list", new ListHabitsCommand(habitRepo) },
@@ -97,48 +103,17 @@ namespace ChatBot.UI.ViewModels
             string input = UserInput.Trim();
             Messages.Add(new ChatMessage { Sender = "Ви", Text = input, IsUser = true });
 
-            if (input.StartsWith("/user_switch"))
-            {
-                SwitchUser(input);
-            }
-            else
-            {
-                string response = _chatEngine.ProcessMessage(input, _currentUserId);
+            string response = _chatEngine.ProcessMessage(input, _currentUserId);
                 
-                if (input.StartsWith("/user_rename"))
-                {
-                    var user = _userRepo.GetUserById(_currentUserId);
-                    CurrentUserName = user?.Username ?? CurrentUserName;
-                }
-
-                Messages.Add(new ChatMessage { Sender = "Бот", Text = response, IsUser = false });
+            if (input.StartsWith("/user_rename"))
+            {
+                var user = _userRepo.GetUserById(_currentUserId);
+                CurrentUserName = user?.Username ?? CurrentUserName;
             }
+
+            Messages.Add(new ChatMessage { Sender = "Бот", Text = response, IsUser = false });
 
             UserInput = string.Empty;
-        }
-
-        private void SwitchUser(string input)
-        {
-            var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length < 2)
-            {
-                Messages.Add(new ChatMessage { Sender = "Бот", Text = "❌ Вкажіть ім'я: /user_switch [Ім'я]", IsUser = false });
-                return;
-            }
-
-            string name = parts[1];
-            var user = _userRepo.GetAllUsers().FirstOrDefault(u => u.Username.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-            if (user != null)
-            {
-                _currentUserId = user.Id;
-                CurrentUserName = user.Username;
-                Messages.Add(new ChatMessage { Sender = "Бот", Text = $"🔑 Ви переключилися на користувача: {CurrentUserName}", IsUser = false });
-            }
-            else
-            {
-                Messages.Add(new ChatMessage { Sender = "Бот", Text = $"⚠️ Користувача з ім'ям '{name}' не знайдено.", IsUser = false });
-            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
