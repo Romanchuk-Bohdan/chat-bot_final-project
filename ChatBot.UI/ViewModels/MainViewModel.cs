@@ -1,12 +1,13 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ChatBot.Services.BotLogic;
-using ChatBot.Services.BotLogic.BotCommands;
 using ChatBot.UI.Models;
 using ChatBot.Core.Interfaces;
 using ChatBot.Core.Models;
 using ChatBot.Data.Repositories;
+using ChatBot.UI.Factories;
 
 namespace ChatBot.UI.ViewModels
 {
@@ -35,16 +36,15 @@ namespace ChatBot.UI.ViewModels
         public MainViewModel()
         {
             _userRepo = new JsonUserRepository();
-            var transRepo = new JsonTransactionRepository();
-            var expenseRepo = new JsonExpenseRepository();
-            var habitRepo = new JsonHabitRepository();
-            var incomeRepo = new JsonIncomeRepository();
-            var goalRepo = new JsonGoalRepository();
+
+            // Використовуємо фабрику замість жорсткого кодування (Extract Class / Factory Method)
+            _chatEngine = ChatEngineFactory.CreateEngine(_userRepo, user =>
+            {
+                _currentUserId = user.Id;
+                CurrentUserName = user.Username;
+            });
 
             InitializeDefaultUser();
-
-            _chatEngine = new ChatEngine(
-                BuildCommands(transRepo, expenseRepo, habitRepo, incomeRepo, goalRepo));
 
             Messages.Add(new ChatMessage
             {
@@ -52,54 +52,6 @@ namespace ChatBot.UI.ViewModels
                 Text = $"Привіт, {CurrentUserName}! Я твій асистент. Введи /help для списку команд.",
                 IsUser = false
             });
-        }
-
-        private Dictionary<string, ICommandStrategy> BuildCommands(
-            JsonTransactionRepository transRepo,
-            JsonExpenseRepository expenseRepo,
-            JsonHabitRepository habitRepo,
-            JsonIncomeRepository incomeRepo,
-            JsonGoalRepository goalRepo)
-        {
-            return new Dictionary<string, ICommandStrategy>
-            {
-                { "/help",         new HelpCommand() },
-                { "/help_expense", new HelpExpenseCommand() },
-                { "/help_habit",   new HelpHabitCommand() },
-                { "/help_user",    new HelpUserCommand() },
-                { "/help_income",  new HelpIncomeCommand() },
-                { "/help_goal",    new HelpGoalCommand() },
-
-                { "/stats",  new StatsCommand(transRepo, habitRepo, expenseRepo, incomeRepo) },
-                { "/report", new GenerateReportCommand(_userRepo, transRepo, habitRepo) },
-
-                { "/expense_create", new AddExpenseCommand(transRepo, expenseRepo) },
-                { "/expense_list",   new ListExpensesCommand(transRepo, expenseRepo) },
-                { "/expense_delete", new DeleteExpenseCommand(transRepo) },
-
-                { "/income_add",    new AddIncomeCommand(incomeRepo) },
-                { "/income_list",   new ListIncomeCommand(incomeRepo) },
-                { "/income_delete", new DeleteIncomeCommand(incomeRepo) },
-
-                { "/user_create", new CreateUserCommand(_userRepo) },
-                { "/user_rename", new RenameUserCommand(_userRepo) },
-                { "/user_list",   new ListUsersCommand(_userRepo) },
-                { "/user_switch", new SwitchUserCommand(_userRepo, user =>
-                    {
-                        _currentUserId = user.Id;
-                        CurrentUserName = user.Username;
-                    })
-                },
-
-                { "/habit_add",    new AddHabitCommand(habitRepo) },
-                { "/habit_list",   new ListHabitCommand(habitRepo) },
-                { "/habit_delete", new DeleteHabitCommand(habitRepo) },
-
-                { "/goal_add",       new AddGoalCommand(goalRepo) },
-                { "/goal_list",      new ListGoalsCommand(goalRepo) },
-                { "/goal_add_money", new ContributeGoalCommand(goalRepo) },
-                { "/goal_delete",    new DeleteGoalCommand(goalRepo) }
-            };
         }
 
         private void InitializeDefaultUser()
