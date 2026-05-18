@@ -32,19 +32,10 @@ namespace ChatBot.UI.ViewModels
             set { _currentUserName = value; OnPropertyChanged(); }
         }
 
-        public MainViewModel()
+        public MainViewModel(IUserRepository userRepo, ChatEngine chatEngine)
         {
-            _userRepo = new JsonUserRepository();
-            var transRepo = new JsonTransactionRepository();
-            var expenseRepo = new JsonExpenseRepository();
-            var habitRepo = new JsonHabitRepository();
-            var incomeRepo = new JsonIncomeRepository();
-            var goalRepo = new JsonGoalRepository();
 
             InitializeDefaultUser();
-
-            _chatEngine = new ChatEngine(
-                BuildCommands(transRepo, expenseRepo, habitRepo, incomeRepo, goalRepo));
 
             Messages.Add(new ChatMessage
             {
