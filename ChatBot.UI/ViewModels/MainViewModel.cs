@@ -45,53 +45,6 @@ namespace ChatBot.UI.ViewModels
             });
         }
 
-        private Dictionary<string, ICommandStrategy> BuildCommands(
-            JsonTransactionRepository transRepo,
-            JsonExpenseRepository expenseRepo,
-            JsonHabitRepository habitRepo,
-            JsonIncomeRepository incomeRepo,
-            JsonGoalRepository goalRepo)
-        {
-            return new Dictionary<string, ICommandStrategy>
-            {
-                { "/help",         new HelpCommand() },
-                { "/help_expense", new HelpExpenseCommand() },
-                { "/help_habit",   new HelpHabitCommand() },
-                { "/help_user",    new HelpUserCommand() },
-                { "/help_income",  new HelpIncomeCommand() },
-                { "/help_goal",    new HelpGoalCommand() },
-
-                { "/stats",  new StatsCommand(transRepo, habitRepo, expenseRepo, incomeRepo) },
-                { "/report", new GenerateReportCommand(_userRepo, transRepo, habitRepo) },
-
-                { "/expense_create", new AddExpenseCommand(transRepo, expenseRepo) },
-                { "/expense_list",   new ListExpensesCommand(transRepo, expenseRepo) },
-                { "/expense_delete", new DeleteExpenseCommand(transRepo) },
-
-                { "/income_add",    new AddIncomeCommand(incomeRepo) },
-                { "/income_list",   new ListIncomeCommand(incomeRepo) },
-                { "/income_delete", new DeleteIncomeCommand(incomeRepo) },
-
-                { "/user_create", new CreateUserCommand(_userRepo) },
-                { "/user_rename", new RenameUserCommand(_userRepo) },
-                { "/user_list",   new ListUsersCommand(_userRepo) },
-                { "/user_switch", new SwitchUserCommand(_userRepo, user =>
-                    {
-                        _currentUserId = user.Id;
-                        CurrentUserName = user.Username;
-                    })
-                },
-
-                { "/habit_add",    new AddHabitCommand(habitRepo) },
-                { "/habit_list",   new ListHabitCommand(habitRepo) },
-                { "/habit_delete", new DeleteHabitCommand(habitRepo) },
-
-                { "/goal_add",       new AddGoalCommand(goalRepo) },
-                { "/goal_list",      new ListGoalsCommand(goalRepo) },
-                { "/goal_add_money", new ContributeGoalCommand(goalRepo) },
-                { "/goal_delete",    new DeleteGoalCommand(goalRepo) }
-            };
-        }
 
         private void InitializeDefaultUser()
         {
