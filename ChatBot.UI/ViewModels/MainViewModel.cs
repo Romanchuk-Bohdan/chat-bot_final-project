@@ -33,9 +33,8 @@ namespace ChatBot.UI.ViewModels
             set { _currentUserName = value; OnPropertyChanged(); }
         }
 
-        public MainViewModel()
+        public MainViewModel(IUserRepository userRepo, ChatEngine chatEngine)
         {
-            _userRepo = new JsonUserRepository();
 
             // Використовуємо фабрику замість жорсткого кодування (Extract Class / Factory Method)
             _chatEngine = ChatEngineFactory.CreateEngine(_userRepo, user =>
@@ -44,8 +43,6 @@ namespace ChatBot.UI.ViewModels
                 CurrentUserName = user.Username;
             });
 
-            InitializeDefaultUser();
-
             Messages.Add(new ChatMessage
             {
                 Sender = "Бот",
@@ -53,6 +50,7 @@ namespace ChatBot.UI.ViewModels
                 IsUser = false
             });
         }
+
 
         private void InitializeDefaultUser()
         {
