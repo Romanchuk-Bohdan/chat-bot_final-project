@@ -1,12 +1,13 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ChatBot.Services.BotLogic;
-using ChatBot.Services.BotLogic.BotCommands;
 using ChatBot.UI.Models;
 using ChatBot.Core.Interfaces;
 using ChatBot.Core.Models;
 using ChatBot.Data.Repositories;
+using ChatBot.UI.Factories;
 
 namespace ChatBot.UI.ViewModels
 {
@@ -35,7 +36,12 @@ namespace ChatBot.UI.ViewModels
         public MainViewModel(IUserRepository userRepo, ChatEngine chatEngine)
         {
 
-            InitializeDefaultUser();
+            // Використовуємо фабрику замість жорсткого кодування (Extract Class / Factory Method)
+            _chatEngine = ChatEngineFactory.CreateEngine(_userRepo, user =>
+            {
+                _currentUserId = user.Id;
+                CurrentUserName = user.Username;
+            });
 
             Messages.Add(new ChatMessage
             {
