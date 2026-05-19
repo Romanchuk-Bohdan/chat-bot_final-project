@@ -22,53 +22,76 @@ namespace ChatBot.Data.Repositories
             }
         }
 
-        public IEnumerable<Transaction> GetAllTransactions()
+        private List<Transaction> LoadTransactions()
         {
             var json = File.ReadAllText(_filePath);
-            return JsonSerializer.Deserialize<List<Transaction>>(json) ?? new List<Transaction>();
+
+            return JsonSerializer.Deserialize<List<Transaction>>(json)
+                   ?? new List<Transaction>();
+        }
+
+        private void SaveTransactions(List<Transaction> transactions)
+        {
+            var json = JsonSerializer.Serialize(
+                transactions,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+            File.WriteAllText(_filePath, json);
+        }
+
+        public IEnumerable<Transaction> GetAllTransactions()
+        {
+            return LoadTransactions();
         }
 
         public Transaction GetTransactionById(string id)
         {
-            var transactions = GetAllTransactions();
-            return transactions.FirstOrDefault(t => t.Id == id);
+            return LoadTransactions()
+                .FirstOrDefault(t => t.Id == id);
         }
 
         public IEnumerable<Transaction> GetTransactionsByCategory(string categoryId)
         {
-            var transactions = GetAllTransactions();
-            return transactions.Where(t => t.CategoryId == categoryId);
+            return LoadTransactions()
+                .Where(t => t.CategoryId == categoryId);
         }
 
         public void SaveTransaction(Transaction transaction)
         {
-            var transactions = GetAllTransactions().ToList();
-            var existingIndex = transactions.FindIndex(t => t.Id == transaction.Id);
+            var transactions = LoadTransactions();
 
-            if (existingIndex >= 0)
+            var existingTransaction = transactions
+                .FirstOrDefault(t => t.Id == transaction.Id);
+
+            if (existingTransaction != null)
             {
-                transactions[existingIndex] = transaction;
+                var index = transactions.IndexOf(existingTransaction);
+                transactions[index] = transaction;
             }
             else
             {
                 transactions.Add(transaction);
             }
 
-            var json = JsonSerializer.Serialize(transactions, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_filePath, json);
+            SaveTransactions(transactions);
         }
 
         public void DeleteTransaction(string id)
         {
-            var transactions = GetAllTransactions().ToList();
-            var transactionToRemove = transactions.FirstOrDefault(t => t.Id == id);
-            
-            if (transactionToRemove != null)
-            {
-                transactions.Remove(transactionToRemove);
-                var json = JsonSerializer.Serialize(transactions, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(_filePath, json);
-            }
+            var transactions = LoadTransactions();
+
+            var transactionToRemove = transactions
+                .FirstOrDefault(t => t.Id == id);
+
+            if (transactionToRemove == null)
+                return;
+
+            transactions.Remove(transactionToRemove);
+
+            SaveTransactions(transactions);
         }
     }
 }
